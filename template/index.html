@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles/estilo.css">
+    <link rel="shortcut icon" href="../static/assets/capa.png" type="image/x-icon">
+    <title>Miley's</title>
+</head>
+<body>
+    <img class="fundo" src="../static/assets/fundo.png" alt="">
+
+   
+    <div class="titulo">
+        <img src="../static/assets/titulo.png" alt="">
+    </div>
+
+    <div>
+        <img class="capa" src="../static/assets/capa.png" alt="">
+    </div>
+
+    <div>
+        <img class="tocando" src="../static/assets/tocando.png" alt="">
+    </div>
+
+    <div>
+        <img class="tracklist" src="../static/assets/tracklist.png" alt="Capa do álbum">  
+    </div>
+
+    <div>
+        <img class="miley" src="../static/assets/miley.png" alt="">
+    </div>
+
+    <img class="video" src="../static/assets/video.gif" alt="">
+
+    <div>
+        <img class="moldura" src="../static/assets/moldura.png" alt="">
+    </div>
+    
+    <div class="musica">
+        <audio id="musica" src="../midia/musica.mp3" autoplay loop></audio>
+        <img id="playPauseImg" src="../static/assets/play.png" alt="Tocar Música" onclick="tocarOuPausar()">
+    </div>
+     
+    
+
+    <script>
+        const audio = document.getElementById("musica");
+        const botaoImg = document.getElementById("playPauseImg");
+
+            botaoImg.style.width = "120px";
+
+        // Verifica se existe tempo salvo
+        const tempoSalvo = localStorage.getItem("musicaTempo");
+        if (tempoSalvo) {
+            audio.currentTime = parseFloat(tempoSalvo);
+        }
+
+        // Tenta iniciar a música sem som para evitar bloqueio do navegador
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("musicaTocando") === "true") {
+                audio.volume = 0; // Começa sem som para evitar bloqueio
+                audio.play().then(() => {
+                    setTimeout(() => {
+                        audio.volume = 1; // Aumenta o volume depois
+                    }, 1000);
+                    botaoImg.src = "/static/assets/play.png"; // Atualiza ícone
+                }).catch(error => {
+                    console.warn("Autoplay bloqueado, clique no botão para tocar.");
+                });
+            }
+        });
+
+        function tocarOuPausar() {
+        if (audio.paused) {
+            audio.play();
+            botaoImg.src = "../static/assets/play.png"; // Muda para pause
+            localStorage.setItem("musicaTocando", "true");
+        } else {
+            audio.pause();
+            botaoImg.src = "../static/assets/pause.png"; // Muda para play
+            localStorage.setItem("musicaTocando", "false");
+        }
+        }
+
+        // Salva o tempo da música antes de sair da página
+        window.addEventListener("beforeunload", () => {
+        localStorage.setItem("musicaTempo", audio.currentTime);
+        });
+
+    </script>
+    
+
+</body>
+</html>
